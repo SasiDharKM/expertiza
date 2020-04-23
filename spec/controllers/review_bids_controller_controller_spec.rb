@@ -7,8 +7,8 @@ RSpec.describe ReviewBidsController, type: :controller do
   let(:participant2) { build(:participant, id: 2, assignment: assignment, user_id: 2) }
   let(:instructor) { build(:instructor, id: 6) }
   let(:topic) { build(:topic) }
-  let(:review_bid1) { build(:review_bid, priority: 1, participant: participant1) }
-  let(:review_bid2) { build(:review_bid, priority: 2, participant: participant2)}
+  let(:review_bid1) { build(:review_bid, id: 1, priority: 1, participant: participant1, topic: topic, assignment: assignment) }
+  let(:review_bid2) { build(:review_bid, id: 2, priority: 2, participant: participant2, topic: topic, assignment: assignment) }
 
   describe "#assign" do
 
@@ -29,20 +29,8 @@ RSpec.describe ReviewBidsController, type: :controller do
   end
 
   describe '#assign_review_priority' do
-    """before (:each) do
-      allow(AssignmentParticipant).to receive(:find).with(participant_id:1).and_return(participant)
-      allow(SignUpTopic).to receive(:find).with(topic: 1).and_return(signed_up_topic)
-      #allow(signed_up_topic).to
-      allow(ReviewBid).to receive(:where).with(participant_id: 1).and_return(bids)
-    end"""
-
-    #@review_data = ReviewBid.create(priority: 1,signuptopic_id: 1, assignment_id: 1)
-    #model.save
     context "when the topic is nil" do
       it "destroys the ReviewBid items" do
-        #before_value = ReviewBid.where(participant_id:35917)
-        #review_count = ReviewBid.count
-        #expect{post :assign_review_priority, :participant_id=>2, :topic=>nil}.to change{review_bid.count}
         post :assign_review_priority, :participant_id=>2, :topic=>nil
         expect{ReviewBid.all}.not_to include review_bid2
       end
