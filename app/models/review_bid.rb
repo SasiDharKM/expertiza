@@ -1,6 +1,7 @@
 class ReviewBid < ActiveRecord::Base
   belongs_to :topic, class_name: 'SignUpTopic'
   belongs_to :participant, class_name: 'Participant'
+  belongs_to :assignment, class_name: 'Assignment'
 
   def self.assignment_reviewers(assignment_id)
     #assignment id is the paramter to hold assignment id of reviewer.

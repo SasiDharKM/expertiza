@@ -456,9 +456,11 @@ FactoryBot.define do
 
   factory :review_bid, class: ReviewBid do
     priority 1
-    participant_id {Participant.first || association(:participant)}
-    signuptopic_id {SignUpTopic.first || association(:topic)}
-    assignment_id {Assignment.first || association(:assignment)}
+    #participant
+    #topic
+    #assignment
+    participant {Participant.first || association(:participant)}
+    topic {SignUpTopic.first || association(:topic)}
+    assignment {Assignment.first || association(:assignment)}
   end
-
 end

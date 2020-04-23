@@ -1,6 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe ReviewBidsController, type: :controller do
+  let(:assignment) { build(:assignment, id: 1) }
+  let(:student) { build(:student) }
+  let(:participant1) { build(:participant, id: 1, assignment: assignment, user_id: 1) }
+  let(:participant2) { build(:participant, id: 2, assignment: assignment, user_id: 2) }
+  let(:instructor) { build(:instructor, id: 6) }
+  let(:topic) { build(:topic) }
+  let(:review_bid1) { build(:review_bid, priority: 1, participant: participant1) }
+  let(:review_bid2) { build(:review_bid, priority: 2, participant: participant2)}
+
   describe "#assign" do
 
   end
@@ -19,22 +28,44 @@ RSpec.describe ReviewBidsController, type: :controller do
     end
   end
 
-  describe '#review_bid' do
-    #it "should render sign_up_sheet/review_bid" do
-    #  expect(controller).to render_template("sign_up_sheet/review_bid")
-    #end
-  end
-
   describe '#assign_review_priority' do
-    #if there is no bid
-    it "should create an new RevideBid entry" do
-      #params[:participant_id] = 35917
-      post :assign_review_priority, :paraticipant_id
-      expect(response).to change(Review.count)
+    """before (:each) do
+      allow(AssignmentParticipant).to receive(:find).with(participant_id:1).and_return(participant)
+      allow(SignUpTopic).to receive(:find).with(topic: 1).and_return(signed_up_topic)
+      #allow(signed_up_topic).to
+      allow(ReviewBid).to receive(:where).with(participant_id: 1).and_return(bids)
+    end"""
+
+    #@review_data = ReviewBid.create(priority: 1,signuptopic_id: 1, assignment_id: 1)
+    #model.save
+    context "when the topic is nil" do
+      it "destroys the ReviewBid items" do
+        #before_value = ReviewBid.where(participant_id:35917)
+        #review_count = ReviewBid.count
+        #expect{post :assign_review_priority, :participant_id=>2, :topic=>nil}.to change{review_bid.count}
+        post :assign_review_priority, :participant_id=>2, :topic=>nil
+        expect{ReviewBid.all}.not_to include review_bid2
+      end
     end
 
-    #if there is a bid
-    it "should update the priorities of the entries"
+    #if there is no bid
+    context "when there is no bid"
+      it "creates a new ReviewBid item" do
+        expect{post :assign_review_priority, :participant_id=>1, :topic=>2}.to change{ReviewBid.count}
+      end
+
+    context "when there is a bid" do
+      it "should not create a new ReviewBid item" do
+        expect{post :assign_review_priority, :participant_id=>1, :topic=>1}.not_to change{ReviewBid.count}
+      end
+
+      it "should update the priorities of the entries" do
+        #review_priority = ReviewBid.where(participant_id:1,assignment_id:1).pluck(:priority)
+        #expect{post :assign_review_priority, :participant_id=>1, :topic=>1}.to change{ReviewBid.where(participant_id:1,assignment_id:1).pluck(:priority)}.from(review_priority)
+        #review_priority = ReviewBid.where(participant_id:1,assignment_id:1).pluck(:priority)
+        expect{post :assign_review_priority, :participant_id=>1, :topic=>1}.to change{review_bid1}
+      end
+    end
 
   end
 end
