@@ -453,4 +453,12 @@ FactoryBot.define do
     id 1
     name 'fake_site'
   end
+
+  factory :review_bid, class: ReviewBid do
+    priority 1
+    participant_id {Participant.first || association(:participant)}
+    signuptopic_id {SignUpTopic.first || association(:topic)}
+    assignment_id {Assignment.first || association(:assignment)}
+  end
+
 end
